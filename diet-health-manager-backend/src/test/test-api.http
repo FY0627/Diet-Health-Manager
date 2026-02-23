@@ -1,0 +1,23 @@
+### 1. 测试注册接口
+POST http://localhost:8080/user/register
+Content-Type: application/json
+
+{
+  "username": "test_user_001",
+  "password": "123456",
+  "checkPassword": "123456",
+  "gender": 1
+}
+
+### 2. 测试登录接口 (注意观察返回结果)
+POST http://localhost:8080/user/login
+Content-Type: application/json
+
+{
+  "username": "test_user_001",
+  "password": "123456"
+}
+
+### 3. 测试获取当前用户 (需要先执行登录，IDEA会自动管理Cookie)
+GET http://localhost:8080/user/current
+Content-Type: application/json
