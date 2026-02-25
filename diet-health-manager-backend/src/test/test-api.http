@@ -1,3 +1,5 @@
+### ================= 用户模块测试 =================
+
 ### 1. 测试注册接口
 POST http://localhost:8080/user/register
 Content-Type: application/json
@@ -9,7 +11,7 @@ Content-Type: application/json
   "gender": 1
 }
 
-### 2. 测试登录接口 (注意观察返回结果)
+### 2. 测试登录接口 (注意：测试下面接口前，必须先点一次这个绿三角)
 POST http://localhost:8080/user/login
 Content-Type: application/json
 
@@ -18,6 +20,49 @@ Content-Type: application/json
   "password": "123456"
 }
 
-### 3. 测试获取当前用户 (需要先执行登录，IDEA会自动管理Cookie)
+### 3. 测试获取当前登录用户
 GET http://localhost:8080/user/current
+Content-Type: application/json
+
+
+### ================= 饮食记录模块测试 =================
+
+### 4. 测试添加饮食记录
+# 注意：前提是你的 food 表里必须有一条 id 为 1 的食物数据
+POST http://localhost:8080/diet/add
+Content-Type: application/json
+
+{
+  "foodId": 1,
+  "mealType": 0,
+  "quantity": 150.5,
+  "recordDate": "2026-02-23"
+}
+
+### 5. 测试添加饮食记录（不传日期，测试默认当天的逻辑）
+POST http://localhost:8080/diet/add
+Content-Type: application/json
+
+{
+  "foodId": 1,
+  "mealType": 1,
+  "quantity": 200
+}
+
+### 6. 测试查询某天的饮食记录 (带日期参数)
+GET http://localhost:8080/diet/daily?date=2026-02-23
+Content-Type: application/json
+
+### 7. 测试查询今天的饮食记录 (不带日期参数)
+GET http://localhost:8080/diet/daily
+Content-Type: application/json
+
+### 8. 测试统计当日营养总摄入量
+# 先执行登录，再执行这个
+GET http://localhost:8080/diet/nutrition-stats?date=2026-02-23
+Content-Type: application/json
+
+### 9. 测试统计当日营养总摄入量
+# 先执行登录，再执行这个
+GET http://localhost:8080/diet/nutrition-stats
 Content-Type: application/json

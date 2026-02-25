@@ -42,7 +42,7 @@ public class BaseEntity implements Serializable {
      * 对应数据库中 datetime
      * 插入时自动填充
      */
-    @TableField(value = "update_time", fill = FieldFill.INSERT)
+    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
     private LocalDateTime updateTime;
 
     /**

@@ -46,7 +46,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         queryWrapper.eq("username", username);
         long count = this.count(queryWrapper);
         if (count > 0) {
-            throw new RuntimeException("账号已存在");
+            throw new RuntimeException("用户名已存在");
         }
 
         // 5. 密码加密 (MD5 + 盐)
