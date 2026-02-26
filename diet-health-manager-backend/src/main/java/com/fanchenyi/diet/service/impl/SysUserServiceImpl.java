@@ -9,6 +9,7 @@ import com.fanchenyi.diet.model.entity.SysUser;
 import com.fanchenyi.diet.service.SysUserService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import com.fanchenyi.diet.model.dto.UserUpdateRequest;
 
 /**
  * 用户服务实现类
@@ -97,5 +98,40 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // 注意：这里绝对不返回 passwordHash
 
         return safetyUser;
+    }
+
+    @Override
+    public void updateUser(UserUpdateRequest request, Long userId) {
+        SysUser user = this.getById(userId);
+        if (user == null) {
+            throw new RuntimeException("用户不存在");
+        }
+
+        boolean needUpdate = false;
+
+        // 1. 如果传了生日，就更新生日
+        if (request.getBirthday() != null) {
+            user.setBirthday(request.getBirthday());
+            needUpdate = true;
+        }
+
+        // 2. 如果传了性别，就更新性别
+        if (request.getGender() != null) {
+            user.setGender(request.getGender());
+            needUpdate = true;
+        }
+
+        // 3. 如果传了密码，就重新加盐加密并更新
+        if (StringUtils.hasText(request.getPassword())) {
+            // 注意：这里必须和注册时使用同一个盐值
+            String encryptPassword = DigestUtil.md5Hex(SALT + request.getPassword());
+            user.setPasswordHash(encryptPassword);
+            needUpdate = true;
+        }
+
+        // 4. 只有当有字段需要修改时，才去操作数据库
+        if (needUpdate) {
+            this.updateById(user);
+        }
     }
 }

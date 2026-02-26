@@ -57,7 +57,7 @@ Content-Type: application/json
 GET http://localhost:8080/diet/daily
 Content-Type: application/json
 
-### 8. 测试统计当日营养总摄入量
+### 8. 测试统计某日营养总摄入量
 # 先执行登录，再执行这个
 GET http://localhost:8080/diet/nutrition-stats?date=2026-02-23
 Content-Type: application/json
@@ -66,3 +66,71 @@ Content-Type: application/json
 # 先执行登录，再执行这个
 GET http://localhost:8080/diet/nutrition-stats
 Content-Type: application/json
+
+### ================= 健康数据模块测试 =================
+
+### 10. 测试录入/更新健康数据 (自动计算 BMI 和 BMR)
+POST http://localhost:8080/health/update
+Content-Type: application/json
+
+{
+  "height": 175.5,
+  "weight": 70.0
+}
+
+### 11. 测试完善个人信息 (补充生日)
+POST http://localhost:8080/user/update
+Content-Type: application/json
+
+{
+  "birthday": "2002-05-20",
+  "gender": 1
+}
+
+### ================= 营养目标模块测试 =================
+
+### 12. 设置每日营养目标
+# 假设根据 BMR 计算，给自己定个减肥目标
+POST http://localhost:8080/goal/update
+Content-Type: application/json
+
+{
+  "targetCalories": 1600.0,
+  "targetProtein": 120.0,
+  "targetCarbohydrate": 150.0,
+  "targetFat": 50.0
+}
+
+### 13. 查看营养目标
+GET http://localhost:8080/goal/info
+Content-Type: application/json
+
+### ================= 综合看板模块测试 =================
+
+### 14. 获取每日综合营养看板
+GET http://localhost:8080/analysis/daily-board
+Content-Type: application/json
+
+### ================= 食物库模块测试 =================
+
+### 15. 添加自定义食物 (多加几个方便测试分页)
+POST http://localhost:8080/food/add
+Content-Type: application/json
+
+{
+  "foodName": "全麦面包",
+  "calories": 250.0,
+  "protein": 10.5,
+  "fat": 3.0,
+  "carbohydrate": 45.0
+}
+
+### 16. 分页搜索食物库 (搜关键字 "面包")
+POST http://localhost:8080/food/list
+Content-Type: application/json
+
+{
+  "keyword": "面包",
+  "current": 1,
+  "size": 5
+}

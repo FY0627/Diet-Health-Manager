@@ -5,6 +5,7 @@ import com.fanchenyi.diet.model.dto.UserLoginRequest;
 import com.fanchenyi.diet.model.dto.UserRegisterRequest;
 import com.fanchenyi.diet.model.entity.SysUser;
 import com.fanchenyi.diet.service.SysUserService;
+import com.fanchenyi.diet.model.dto.UserUpdateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -65,5 +66,27 @@ public class UserController {
             return Result.error(401, "未登录");
         }
         return Result.success(currentUser);
+    }
+
+    /**
+     * 修改个人信息
+     */
+    @PostMapping("/update")
+    public Result<String> updateUserInfo(@RequestBody UserUpdateRequest request, HttpServletRequest httpServletRequest) {
+        SysUser currentUser = (SysUser) httpServletRequest.getSession().getAttribute("user_login");
+        if (currentUser == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        try {
+            sysUserService.updateUser(request, currentUser.getId());
+            // 更新成功后，为了防止 Session 里的旧数据引发问题，最好把新的用户信息覆盖到 Session 里
+            SysUser updatedUser = sysUserService.getById(currentUser.getId());
+            httpServletRequest.getSession().setAttribute("user_login", updatedUser);
+
+            return Result.success("个人信息更新成功");
+        } catch (RuntimeException e) {
+            return Result.error(e.getMessage());
+        }
     }
 }
