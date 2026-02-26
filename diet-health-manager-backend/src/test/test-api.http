@@ -134,3 +134,19 @@ Content-Type: application/json
   "current": 1,
   "size": 5
 }
+
+### ================= 最终阶段：缝补与聚合测试 =================
+
+### 17. 测试分页查询用户的饮食记录 (查询历史所有记录)
+GET http://localhost:8080/diet/page?current=1&size=5
+Content-Type: application/json
+
+### 18. 测试删除单条饮食记录
+# ⚠️ 注意：这里的 5 是 diet_record 表里的主键 id，如果你的表里没有 id=1 的记录，请改成你数据库里真实存在的记录 id
+DELETE http://localhost:8080/diet/delete/5
+Content-Type: application/json
+
+### 19. 终极测试：获取完整的每日综合营养看板 (包含餐别和 BMI)
+# 确保在运行此接口前，你今天至少添加了一条饮食记录
+GET http://localhost:8080/analysis/daily-board
+Content-Type: application/json

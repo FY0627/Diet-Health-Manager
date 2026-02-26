@@ -17,6 +17,13 @@ public class DailyAnalysisVO implements Serializable {
 
     // === 基础参考 ===
     private BigDecimal bmr; // 基础代谢率
+    private BigDecimal bmi; // BMI 体质指数
+
+    // === 新增：按餐别统计的热量 ===
+    private BigDecimal breakfastCalories = BigDecimal.ZERO;
+    private BigDecimal lunchCalories = BigDecimal.ZERO;
+    private BigDecimal dinnerCalories = BigDecimal.ZERO;
+    private BigDecimal snackCalories = BigDecimal.ZERO;
 
     // === 卡路里分析 ===
     private BigDecimal targetCalories;
@@ -37,4 +44,6 @@ public class DailyAnalysisVO implements Serializable {
 
     // === 智能建议 ===
     private String advice;
+
+
 }

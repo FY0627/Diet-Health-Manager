@@ -9,7 +9,8 @@ import com.fanchenyi.diet.service.DietRecordService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import java.util.List;
 
 @RestController
@@ -65,5 +66,52 @@ public class DietRecordController {
 
         DailyNutritionVO stats = dietRecordService.calculateDailyNutrition(currentUser.getId(), date);
         return Result.success(stats);
+    }
+
+    /**
+     * 删除饮食记录
+     */
+    @DeleteMapping("/delete/{id}")
+    public Result<String> deleteRecord(@PathVariable Long id, HttpServletRequest httpServletRequest) {
+        SysUser currentUser = (SysUser) httpServletRequest.getSession().getAttribute("user_login");
+        if (currentUser == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        // 安全校验：只能删除自己的记录
+        DietRecord record = dietRecordService.getById(id);
+        if (record == null) {
+            return Result.error("记录不存在");
+        }
+        if (!record.getUserId().equals(currentUser.getId())) {
+            return Result.error("无权删除他人的记录");
+        }
+
+        dietRecordService.removeById(id);
+        return Result.success("删除成功");
+    }
+
+    /**
+     * 按用户分页查询饮食记录
+     */
+    @GetMapping("/page")
+    public Result<Page<DietRecord>> pageRecords(
+            @RequestParam(defaultValue = "1") long current,
+            @RequestParam(defaultValue = "10") long size,
+            HttpServletRequest httpServletRequest) {
+
+        SysUser currentUser = (SysUser) httpServletRequest.getSession().getAttribute("user_login");
+        if (currentUser == null) {
+            return Result.error(401, "请先登录");
+        }
+
+        Page<DietRecord> page = new Page<>(current, size);
+        QueryWrapper<DietRecord> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("user_id", currentUser.getId());
+        // 按照记录日期倒序，新的记录在前面
+        queryWrapper.orderByDesc("record_date", "create_time");
+
+        Page<DietRecord> resultPage = dietRecordService.page(page, queryWrapper);
+        return Result.success(resultPage);
     }
 }
