@@ -31,12 +31,9 @@ public class DietRecordController {
             return Result.error(401, "请先登录");
         }
 
-        try {
-            dietRecordService.addRecord(request, currentUser.getId());
-            return Result.success("记录添加成功");
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+        dietRecordService.addRecord(request, currentUser.getId());
+        return Result.success("记录添加成功");
+
     }
 
     /**

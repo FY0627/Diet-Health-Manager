@@ -28,11 +28,8 @@ public class AnalysisController {
             return Result.error(401, "请先登录");
         }
 
-        try {
-            DailyAnalysisVO vo = analysisService.getDailyAnalysis(currentUser.getId(), date);
-            return Result.success(vo);
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+        DailyAnalysisVO vo = analysisService.getDailyAnalysis(currentUser.getId(), date);
+        return Result.success(vo);
+
     }
 }

@@ -22,11 +22,8 @@ public class HealthDataController {
             return Result.error(401, "请先登录");
         }
 
-        try {
-            healthDataService.saveOrUpdateHealthData(request, currentUser.getId());
-            return Result.success("健康数据更新成功，BMI和BMR已自动计算");
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+        healthDataService.saveOrUpdateHealthData(request, currentUser.getId());
+        return Result.success("健康数据更新成功，BMI和BMR已自动计算");
+
     }
 }

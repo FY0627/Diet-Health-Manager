@@ -29,11 +29,9 @@ public class FoodController {
      */
     @PostMapping("/add")
     public Result<String> addFood(@RequestBody Food food) {
-        try {
-            foodService.addCustomFood(food);
-            return Result.success("添加食物成功");
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+
+        foodService.addCustomFood(food);
+        return Result.success("添加食物成功");
+
     }
 }

@@ -29,12 +29,10 @@ public class UserController {
         if (request == null) {
             return Result.error("请求参数为空");
         }
-        try {
-            long result = sysUserService.register(request);
-            return Result.success(result);
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+
+        long result = sysUserService.register(request);
+        return Result.success(result);
+
     }
 
     /**
@@ -45,14 +43,12 @@ public class UserController {
         if (request == null) {
             return Result.error("请求参数为空");
         }
-        try {
-            SysUser user = sysUserService.login(request.getUsername(), request.getPassword());
-            // 登录成功后，将用户信息存入 Session (简化版登录状态管理)
-            httpServletRequest.getSession().setAttribute("user_login", user);
-            return Result.success(user);
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+
+        SysUser user = sysUserService.login(request.getUsername(), request.getPassword());
+        // 登录成功后，将用户信息存入 Session (简化版登录状态管理)
+        httpServletRequest.getSession().setAttribute("user_login", user);
+        return Result.success(user);
+
     }
 
     /**
@@ -78,15 +74,12 @@ public class UserController {
             return Result.error(401, "请先登录");
         }
 
-        try {
-            sysUserService.updateUser(request, currentUser.getId());
-            // 更新成功后，为了防止 Session 里的旧数据引发问题，最好把新的用户信息覆盖到 Session 里
-            SysUser updatedUser = sysUserService.getById(currentUser.getId());
-            httpServletRequest.getSession().setAttribute("user_login", updatedUser);
+        sysUserService.updateUser(request, currentUser.getId());
+        // 更新成功后，为了防止 Session 里的旧数据引发问题，最好把新的用户信息覆盖到 Session 里
+        SysUser updatedUser = sysUserService.getById(currentUser.getId());
+        httpServletRequest.getSession().setAttribute("user_login", updatedUser);
 
-            return Result.success("个人信息更新成功");
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+        return Result.success("个人信息更新成功");
+
     }
 }

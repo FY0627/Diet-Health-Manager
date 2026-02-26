@@ -26,12 +26,9 @@ public class NutritionGoalController {
             return Result.error(401, "请先登录");
         }
 
-        try {
-            nutritionGoalService.saveOrUpdateGoal(request, currentUser.getId());
-            return Result.success("营养目标设置成功");
-        } catch (RuntimeException e) {
-            return Result.error(e.getMessage());
-        }
+        nutritionGoalService.saveOrUpdateGoal(request, currentUser.getId());
+        return Result.success("营养目标设置成功");
+
     }
 
     /**
